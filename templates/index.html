@@ -2,8 +2,9 @@
 
 <h1>Contacts</h1>
 
-<form>
+<form method="post" action="{{ url_for('index') }}">
   <input type="text" name="name" placeholder="Name" />
+  <input type="email" name="email" placeholder="Email">
   <input
     type="text"
     name="number"
@@ -11,4 +12,9 @@
   />
   <input type="submit" value="Add Contact" />
 </form>
+{% if contacts %}
+{% include "contact_table.html" %}
+{% else %}
+<h1>No Contacts Currently</h1>
+{% endif %}
 {% endblock %}
