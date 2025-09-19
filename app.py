@@ -40,7 +40,32 @@ def index():
     return render_template("index.html", contacts=contacts)
 
 
-# TODO: add in ability to edit contacts from homepage
+@app.route("/contacts/<int:contact_id>/edit", methods=["GET", "POST"])
+def edit_contact(contact_id: int):
+    contact = db.session.get(Contact, contact_id)
+    if not contact:
+        return redirect(url_for("index"))
+    if request.method == "POST":
+        contact.name = request.form["name"].strip()
+        contact.email = request.form.get("email", "").strip() or None
+        contact.number = request.form.get("number", "").strip() or None
+        db.session.commit()
+        return redirect(url_for("index"))
+
+    contacts = Contact.query.order_by(Contact.created_at.desc()).all()
+    return render_template("index.html", contacts=contacts, editing_id=contact.id)
+
+
+@app.route("/contacts/<int:contact_id>/delete", methods=["POST"])
+def delete_contact(contact_id: int):
+    contact = db.session.get(Contact, contact_id)
+    if contact is not None:
+        db.session.delete(contact)
+        db.session.commit()
+    return redirect(url_for("index"))
+
+
+# TODO add in ability to edit contacts from homepage
 # TODO: flash messages: show "added/updated/deleted" with flask.flash
 # TODO: timestamps: add "updated_at"
 # TODO: add soft delete, "is_archived"
