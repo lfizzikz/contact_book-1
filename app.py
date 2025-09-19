@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime
 
 from flask import Flask, redirect, render_template, request, url_for
@@ -53,6 +54,9 @@ def edit_contact(contact_id: int):
         return redirect(url_for("index"))
 
     contacts = Contact.query.order_by(Contact.created_at.desc()).all()
+    from flask import flash
+
+    flash("Edited!", category="message")
     return render_template("index.html", contacts=contacts, editing_id=contact.id)
 
 
@@ -63,6 +67,15 @@ def delete_contact(contact_id: int):
         db.session.delete(contact)
         db.session.commit()
     return redirect(url_for("index"))
+
+
+@app.template_filter("dash_phone")
+def dash_phone(value):
+    if not value:
+        return ""
+    digits = re.sub(r"\D", "", str(value))
+    if len(digits) == 10:
+        return f"{digits[:3]}-{digits[3:6]}-{digits[6:]}"
 
 
 # TODO add in ability to edit contacts from homepage
