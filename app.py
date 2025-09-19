@@ -38,3 +38,14 @@ def index():
         return redirect(url_for("index"))
     contacts = Contact.query.order_by(Contact.created_at.desc()).all()
     return render_template("index.html", contacts=contacts)
+
+
+# TODO: add in ability to edit contacts from homepage
+# TODO: flash messages: show "added/updated/deleted" with flask.flash
+# TODO: timestamps: add "updated_at"
+# TODO: add soft delete, "is_archived"
+# TODO: add in tags/groups to contacts
+# TODO: Search: search by name/email/phone/tag
+# TODO: duplicate detection
+# TODO: Notes field per contact
+# TODO: Auth: simple login - per user contacts
